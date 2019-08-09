@@ -1,0 +1,104 @@
+
+{% block sidebar %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/static/dist/css/bootstrap.css" rel="stylesheet">
+    <script src="/static/jquery-3.2.1.min.js"></script>
+    <script src="/static/dist/js/bootstrap.js"></script>
+    <script src="http://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <link rel="icon" href="/static/img/iron-man.png">
+<!-- 引入封装了failback的接口--initGeetest -->
+<script src="http://static.geetest.com/static/tools/gt.js"></script>
+    <link rel="stylesheet" href="/static/css/article.css">
+    <link href="/static/sweetalert/sweetalert.css" rel="stylesheet">
+    <script src="/static/sweetalert/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="/static/css/{{ blog.theme }}">
+</head>
+
+<body>
+
+<div class="header container">
+    <span class="user">{{ blog.title }}</span>
+    {% if request.user.is_authenticated %}
+        <div class="pull-right">
+        <a href="/backend/{{ request.user }}" style="color: white;font-size: 20px">后台管理</a>
+    <a href="/index/?user={{ request.user }}"  style="color: white;font-size: 20px">回到首页</a>
+        </div>
+{% else %}
+        <div class="pull-right">
+            <a href="/backendd/" style="color: white;font-size: 20px">后台管理</a>
+    <a href="/index/" style="color: white;font-size: 20px">回到首页</a>
+        </div>
+        {% endif %}
+</div>
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3">
+
+                <div class="panel panel-warning">
+                      <div class="panel-heading">公告</div>
+                      <div class="panel-body">
+                        Panel content
+                      </div>
+                </div>
+
+                <div class="panel panel-danger">
+                      <div class="panel-heading">随笔分类</div>
+                      <div class="panel-body">
+                        {% for cate in cate_list %}
+                         <p><a href="/{{ username }}/cate/{{ cate.nid }}">{{ cate.title }}({{ cate.article_set.all.count }})</a></p>
+                        {% endfor %}
+
+                      </div>
+                </div>
+
+                 <div class="panel panel-danger">
+                      <div class="panel-heading">我的标签</div>
+                      <div class="panel-body">
+                             {% for tag_info in tags_list %}
+                                <p><a href="/{{ username }}/tag/{{ tag_info.2 }}">{{ tag_info.0 }}({{ tag_info.1 }})</a></p>
+                             {% endfor %}
+
+                      </div>
+                </div>
+
+                 <div class="panel panel-danger">
+                      <div class="panel-heading">日期归档</div>
+                      <div class="panel-body">
+                             {% for date in date_list %}
+                             <p><a href="/{{ username }}/archive/{{ date.0 }}">{{ date.0 }}({{ date.1 }})</a></p>
+                             {% endfor %}
+
+
+                      </div>
+                </div>
+
+        </div>
+        <div class="col-lg-9">
+               <div class="article_list">
+
+
+                 {% block content %}{% endblock %}
+
+            </div>
+        </div>
+<div style="text-align: center">
+            <ul class="pagination">
+                {% for item in page_fen %}
+                {{ item|safe }}
+                {% endfor %}
+
+            </ul>
+        </div>
+    </div>
+
+
+</body>
+</html>
+{% endblock %}

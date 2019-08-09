@@ -1,0 +1,41 @@
+.diggit {
+    /*float: left;*/
+    width: 46px;
+    height: 52px;
+    background: url("/static/img/upup.gif") no-repeat;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 2px;
+    padding-top: 5px;
+}
+
+.author{
+    background-image: url("/static/img/icon.gif");
+    background-repeat: no-repeat;
+    border: 1px solid #ccc;
+    padding: 4px 4px 4px 30px;
+    width: 300px;
+    font-size: 13px;
+    background-position: 3px -3px;
+}
+.buryit {
+    /*float: right;*/
+    margin-left: 20px;
+    width: 46px;
+    height: 52px;
+    background: url('/static/img/downdown.gif') no-repeat;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 2px;
+    padding-top: 5px;
+}
+  .dy{
+
+        border-radius: 10px 10px 10px 10px;
+            background-color: white;
+        box-shadow: 0px 0px 10px #7E7E7E;
+    }
+
+.anb{
+opacity: 0
+}

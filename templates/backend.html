@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        *{
+            margin: 0;
+        }
+        .header{
+            color: #fff;
+            font-family: 华文细黑,黑体,Arial;
+            font-weight: 100;
+            width: 100%;
+            height: 100px;
+            background: url("/static/img/title.jpg");
+{#            line-height: 50px;#}
+        }
+        .gnz{
+            background-color: #66afe9;
+            border-radius: 5px 5px 5px 5px;
+        }
+        .gnj{
+            color: white;
+        }
+    </style>
+    <link rel="stylesheet" href="/static/dist/css/bootstrap.css">
+    <script src="/static/jquery-3.2.1.min.js"></script>
+    <script src="/static/dist/js/bootstrap.js"></script>
+    <script src="/static/kindeditor/kindeditor-all.js"></script>
+    <link href="/static/sweetalert/sweetalert.css" rel="stylesheet">
+    <script src="/static/sweetalert/sweetalert.min.js"></script>
+</head>
+<body>
+
+
+
+<div class="header">
+    <span id="cbd" style="color: white;font-size: 40px;margin-left: 50px;" bid="{{ bid }}">{{ request.user.username }}的后台管理</span>
+    <a class="pull-right" href="/index/?user={{ request.user }}" style="color: white;font-size: 30px;margin-top: 50px">回到首页</a>
+</div>
+<div class="container-fluid">
+
+<div class="row">
+    <div class="col-md-3" style="padding-left: 0px">
+        <div class="list-group">
+  <a  class="list-group-item active">
+    操作
+  </a>
+  <a href="/backend/add_article" class="list-group-item">添加文章</a>
+  <a href="javascript:void(0);" class="list-group-item"  data-toggle="modal" data-target="#myModal">添加分类</a>
+  <a href="javascript:void(0);" class="list-group-item" data-toggle="modal" data-target="#myModal1">添加标签</a>
+{#  <a href="#" class="list-group-item">Vestibulum at eros</a>#}
+</div>
+
+    </div>
+    <div class="col-md-9">
+        {% block con %}
+        <div class="panel panel-primary">
+
+        <div class="panel-heading">
+    <h3 class="panel-title">我的文章</h3>
+  </div>
+  <div class="panel-body">
+
+     {% for article in article_list %}
+                  <div class="article_item  dd">
+                       <h5 class=" ee" ><a href="/{{ article.user.username }}/article/{{ article.nid }}" class="ac"><strong>{{ article.title }}</strong></a></h5>
+                       <div class="row cd">
+                           <a class="avatar_img col-md-2 " href="/{{ article.user.username }}/"><img class="img-rounded tou" src="/media/{{ article.user.avatar }}" alt="" width="60" height="80"></a>
+                           <div class="desc col-md-10">{{ article.desc }}</div>
+                       </div>
+
+                      <div class="info ee">
+                          <a href="/{{ article.user.username }}/"><span>{{ article.user.username }}</span></a> &nbsp;&nbsp;
+                          <span class="timer">{{ article.create_time|date:"Y-m-d H:i" }}</span>&nbsp;&nbsp;
+
+                          <span class="glyphicon glyphicon-comment diantu"></span>&nbsp;<strong class="dian">评论({{ article.comment_count }})</strong>
+                          <span class="glyphicon glyphicon-thumbs-up diantu"></span>&nbsp;<strong class="dian">点赞({{ article.up_count }})</strong>
+                            <button class="btn btn-warning pull-right sid" style="margin-right: 10px" aid="{{ article.nid }}">删除</button>
+                          <a href="/backend/edit_article/{{ article.nid }}" class="btn btn-success pull-right" style="margin-right: 10px">编辑</a>
+                      </div>
+                      <hr class="anb">
+                  </div>
+                {% endfor %}
+  </div>
+        </div>
+        {% endblock %}
+
+    </div>
+</div>
+</div>
+
+{% csrf_token %}
+{#添加分类模态框#}
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">添加分类</h4>
+      </div>
+      <div class="modal-body">
+          <input type="text" placeholder="请填写分类名称" id="catename" class="form-control">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="addcate" data-dismiss="modal">确定添加</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{#添加标签模态框#}
+
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">添加分类</h4>
+      </div>
+      <div class="modal-body">
+          <input type="text" placeholder="请填写标签名称" id="tagname" class="form-control">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="addtag" data-dismiss="modal">确定添加</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    $("#addcate").click(function () {
+        $.ajax({
+            url:"/addcate/",
+            type:"post",
+            data:{"bid":$("#cbd").attr("bid"),"title":$("#catename").val()},
+            headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},
+            success:function (data) {
+                if (data==1){
+                    swal("添加成功！", "","success")
+                }
+                else {
+                    swal("添加失败！", "","error")
+                }
+
+            }
+
+
+        })
+    });
+    $("#addtag").click(function () {
+
+        $.ajax({
+            url:"/addtag/",
+            type:"post",
+            data:{"bid":$("#cbd").attr("bid"),"title":$("#tagname").val()},
+            headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},
+            success:function (data) {
+                if (data==1){
+                    swal("添加成功！", "","success")
+                }
+                else {
+                    swal("添加失败！", "","error")
+                }
+
+            }
+
+
+        })
+    });
+    $('.sid').click(function () {
+        $.ajax({
+            url:'/adelete/',
+            type:"post",
+            data:{'nid':$(this).attr('aid')},
+            headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},
+            success:function (data) {
+                if (data==1){
+                    swal("删除成功！", "","success");
+                    setTimeout(function (){
+                             location.href=""
+                        },2000);
+                }
+                else {
+                    swal("删除失败！", "","error")
+                }
+
+            }
+
+
+        })
+    })
+</script>
+</body>
+</html>

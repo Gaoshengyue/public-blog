@@ -1,0 +1,27 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+   {% for article in article_list %}
+                   <div class="article_item  dd">
+                       <h3 class=" ee" ><a href="/{{ article.user.username }}/article/{{ article.nid }}" class="ac"><strong>{{ article.title }}</strong></a></h3>
+                       <div class="row cd">
+                           <a class="avatar_img col-md-2 " href="/{{ article.user.username }}/" ><img class="img-rounded tou" src="/media/{{ article.user.avatar }}" alt="" width="60" height="80"></a>
+                           <div class="desc col-md-10">{{ article.desc }}</div>
+                       </div>
+
+                      <div class="info ee">
+                          <a href="/{{ article.user.username }}/"><span>{{ article.user.username }}</span></a> &nbsp;&nbsp;
+                          <span class="timer">{{ article.create_time|date:"Y-m-d H:i" }}</span>&nbsp;&nbsp;
+
+                          <span class="glyphicon glyphicon-comment diantu"></span>&nbsp;<strong class="dian">评论({{ article.comment_count }})</strong>
+                          <span class="glyphicon glyphicon-thumbs-up diantu"></span>&nbsp;<strong class="dian">点赞({{ article.up_count }})</strong>
+                      </div>
+                      <hr class="anb">
+                  </div>
+                {% endfor %}
+
+
+
+{% endblock %}
+

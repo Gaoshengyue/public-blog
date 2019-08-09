@@ -1,0 +1,97 @@
+{% extends "backend.html" %}
+
+
+
+{% block con %}
+
+      <div class="article_con list-group">
+          <a class="list-group-item active">文章编辑</a>
+          <form action="/backend/edit_article/{{ ar.nid }}" method="post" class="list-group-item">
+                  {% csrf_token %}
+                 <h5>标题</h5>
+                 <p><input type="text" name="title" class="form-control" value="{{ ar.title }}"></p>
+                 <h5>内容</h5>
+                 <p>
+                     <textarea name="content" id="editor_id" cols="30" rows="10">
+                         {{ ad.content }}
+                     </textarea>
+                 </p>
+                 <div class="panel panel-warning">
+
+                 <div class="panel-heading">分类与标签</div>
+                   <div class="panel-body">
+                 <div class="panel panel-info">
+                       <div class="panel-heading">网站分类</div>
+                 <div class="panel-body">
+                      {% for siteCategory in siteCategoryList %}
+                       <p>{{ siteCategory.name }}：
+                           {% for sitedetaicategory in siteCategory.sitedetaicategory_set.all %}
+                               {% if sitedetaicategory.id == ar.siteDetaiCategory.id%}
+                               <input type="radio" name="site_cate" value="{{ sitedetaicategory.id }}" checked>{{ sitedetaicategory.name }}
+                               {% else %}
+                               <input type="radio" name="site_cate" value="{{ sitedetaicategory.id }}">{{ sitedetaicategory.name }}
+                               {% endif %}
+                           {% endfor %}
+
+                       </p>
+                      {% endfor %}
+                 </div>
+                 </div>
+                   <div class="panel panel-danger">
+                      <div  class="panel-heading">个人空间分类</div>
+                   <div class="panel-body">
+                 {% for cate in cate_list %}
+                     {% if cate.nid == ar.homeCategory.nid%}
+                     <input type="radio" name="blog_cate" value="{{ cate.nid }}" checked>{{ cate.title }}</input>
+                     {% else %}
+                     <input type="radio" name="blog_cate" value="{{ cate.nid }}">{{ cate.title }}</input>
+                     {% endif %}
+                 {% endfor %}
+                   </div>
+                   </div>
+                   <div class="panel panel-success">
+                 <div class="panel-heading">个人空间标签{{ ar.article2tag.tag_id.0 }}</div>
+                   <div class="panel-body">
+                 {% for tag in tag_list %}
+                     {% if tag.nid == tas_id.tag_id%}
+                     <input type="checkbox" name="blog_tag" value="{{ tag.nid }}" checked>{{ tag.title }}</input>
+                     {% else %}
+                     <input type="checkbox" name="blog_tag" value="{{ tag.nid }}">{{ tag.title }}</input>
+                     {% endif %}
+                 {% endfor %}
+                   </div>
+                    </div>
+                   </div>
+                 </div>
+              <p><input type="submit" value="submit" class="btn btn-info"></p>
+          </form>
+      </div>
+
+
+     <script>
+
+           // 富文本编辑器
+            KindEditor.ready(function(K) {
+                window.editor = K.create('#editor_id',{
+                    html : $('#editor_id').val(),
+                    width:"870px",
+                    height:"600px",
+                    //items:[]
+                    resizeType:1,
+                    uploadJson:"/upload_img/",
+                    extraFileUploadParams :{
+                        csrfmiddlewaretoken:$("[name='csrfmiddlewaretoken']").val()
+
+                    },
+                    filePostName:"article_img"
+
+                });
+        });
+
+     </script>
+    <script>
+    $.ajax({
+
+    })
+    </script>
+{% endblock %}

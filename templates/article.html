@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="article_item  dd">
+{% csrf_token %}
+                       <h1 class=" ee" style="text-align: center"><span href="/{{ article.user.username }}/article/{{ article.nid }}"><strong>{{ article.title }}</strong></span></h1>
+                         <div class="row cd" style="margin-left: 100px">
+                           <div class="desc col-md-12">{{ article.articledetail.content|safe }}</div>
+                       </div>
+
+                      <div class="info ee">
+                          <a href="/{{ article.user.username }}/"><span>{{ article.user.username }}</span></a> &nbsp;&nbsp;
+                          <span class="timer">{{ article.create_time|date:"Y-m-d H:i" }}</span>&nbsp;&nbsp;
+
+                          <span class="glyphicon glyphicon-comment diantu"></span>&nbsp;<strong class="dian">评论({{ article.comment_count }})</strong>
+                          <span class="glyphicon glyphicon-thumbs-up diantu"></span>&nbsp;<strong class="dian">点赞({{ article.up_count }})</strong>
+                      </div>
+    <div class="action" article_id="{{ article.nid }}">
+           <div class="pull-right" style="margin-right: 50px">
+    <div class="buryit">
+        <span class="burynum" id="bury_count">{{ article.down_count }}</span>
+    </div>
+            </div>
+
+       <div class=" pull-right">
+            <div class="diggit">
+               <span class="diggnum" id="digg_count">{{ article.up_count }}</span>
+            </div>
+       </div>
+
+
+    </div>
+    <div style="width: 100%;height: 30px;margin-top: 60px">
+           <span class="error_text pull-right" style="color: red;margin-right: 60px"></span>
+      </div>
+
+
+<div style="height: 50px;width: 100%;"></div>
+
+                  </div>
+      <hr class="anb">
+    <div class="dy" style="padding: 20px">
+{#    评论树#}
+<div style="margin-left: 20px;margin-top: 20px">
+    <div class="comment_list_tree">
+        <h5>评论树：</h5>
+         <div class="list-group dy" id="ddp">
+
+{##}
+{#             <div class=" article_item  dy">#}
+{#                <div class="row" >#}
+{#                  <div class="" style="margin-left: 20px">#}
+{##}
+{#                        <span>fsfss</span>#}
+{#                  </div>#}
+{#                </div>#}
+{#             </div>#}
+
+
+
+         </div>
+    </div>
+
+
+{#评论#}
+{#    <div class="comment_list">#}
+{#        <h5>已有评论：</h5>#}
+{#         <div class="list-group" id="dap">#}
+{#            {% for comment in comment_list %}#}
+{##}
+{#            <div class=" article_item dy">#}
+{#                <div class="row" >#}
+{#                  <div class="" style="margin-left: 20px">#}
+{#                      <span><a href="" class="lou">#{{ forloop.counter }}楼</a></span>#}
+{#                        &nbsp;&nbsp;#}
+{#                      <span class="timer">{{ comment.create_time|date:'Y-m-d H:i' }}</span>#}
+{#                        &nbsp;&nbsp;#}
+{#                      <span><a href="/{{ comment.user.username }}">{{ comment.user.username }}</a></span>#}
+{#                      <span style="margin-right: 50px" class="pull-right"><a href="javascript:void(0)" class="huifu" aname="{{ comment.user.username }}" aid="{{ comment.nid }}">回复</a></span>#}
+{#                  </div>#}
+{#              </div>#}
+{#                  {% if comment.parent_comment_id %}#}
+{#                      <div class="well">#}
+{#                      <span>@{{ comment.parent_comment.user.username }}</span>:#}
+{#                      <span>{{ comment.parent_comment.content }}</span>#}
+{#                      </div>#}
+{#                    <div style="margin-left: 10px">#}
+{#                    {{ comment.content }}#}
+{#                </div>#}
+{##}
+{#                {% else %}#}
+{#                <div style="margin-left: 10px">#}
+{#                    {{ comment.content }}#}
+{#                </div>#}
+{##}
+{##}
+{##}
+{#                {% endif %}#}
+{#                  </div>#}
+{#                <hr class="anb">#}
+{##}
+{#            {% endfor %}#}
+{#           </div>#}
+{##}
+{#        </div>#}
+
+
+
+
+    <div class="comment_region">
+
+       <h5>发表评论:</h5>
+       <p>
+          昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="{{ request.user.username }}">
+       </p>
+       <h5>评论内容：</h5>
+       <div>
+           <textarea name="" id="comment_con" cols="60" rows="10" path="{{ path }}">
+
+           </textarea>
+           <p><button class="btn btn-info comment_btn">评论</button></p>
+       </div>
+    </div>
+    <div class="info" articleid="{{ article.nid }}" id="tian"></div>
+</div>
+
+</div>
+
+<script>
+
+  // 点赞
+         $(".diggit").click(function () {
+             // 点赞用户就是登录的用户
+             $.ajax({
+                 url:"/up/",
+                 type:"POST",
+                 data:{
+                      article_id:$(".action").attr("article_id"),
+                      csrfmiddlewaretoken:$('[name="csrfmiddlewaretoken"]').val()
+                 },
+                 success:function (data) {
+                     console.log(data);
+
+                     if(data.state){
+                          var val=$(".diggit .diggnum").text();
+                          $(".diggit .diggnum").text(parseInt(val)+1);
+                         swal("点赞成功！", "感谢参与！","success")
+                     }
+                     else {
+
+                          $(".error_text").text(data.error).css("color","red");
+                          swal("点赞失败！", "请重试！","error");
+                         setTimeout(function () {
+                             $(".error_text").text("")
+                         },1000)
+                     }
+                 }
+             })
+
+         });
+
+         //踩灭
+
+$(".buryit").click(function () {
+             // 点赞用户就是登录的用户
+             $.ajax({
+                 url:"/down/",
+                 type:"POST",
+                 data:{
+                      article_id:$(".action").attr("article_id"),
+                      csrfmiddlewaretoken:$('[name="csrfmiddlewaretoken"]').val()
+                 },
+                 success:function (data) {
+                     console.log(data);
+
+                     if(data.state){
+                          var val=$(".buryit .burynum").text();
+                          $(".buryit .burynum").text(parseInt(val)+1);
+                         swal("踩灭成功！", "感谢参与！","success")
+                     }
+                     else {
+
+                          $(".error_text").text(data.error).css("color","red");
+                          swal("踩灭失败！", "请重试！","error");
+                         setTimeout(function () {
+                             $(".error_text").text("")
+                         },1000)
+                     }
+                 }
+             })
+
+         });
+
+// 提交评论的功能
+        var $parent_comment_id="";
+        $(".comment_btn").click(function () {
+            $.ajax({
+                 url:"/comment/",
+                 type:"POST",
+                 data:{
+                      articleid:$(".action").attr("article_id"),
+                      csrfmiddlewaretoken:$('[name="csrfmiddlewaretoken"]').val(),
+                      content:$("#comment_con").val(),
+                      parent_comment_id:$parent_comment_id,
+                      louceng:$(".lou:last").text()
+
+                 },
+                success:function (data) {
+                     $parent_comment_id="";
+                     $("#comment_con").val('');
+                      var name=data.users;
+                      var pid=data.pid;
+{#                     登录认证#}
+                     if (data.error){
+                         swal({
+				  title: "用户未登录！",
+				  text: "2秒后跳转登录页面。",
+				  timer: 2000,
+				  showConfirmButton: true
+				});
+                         setTimeout(function () {
+                             location.href="/login/?path="+$("#comment_con").attr("path")
+                         },2000)
+                     }
+                     if (data.error2){
+                         swal("发生错误！", "您不能评论自己！","warning")
+                     }
+{#                     及时跟新评论#}
+                    else if (data.pname){
+{#                         var s='<div class=" article_item  dy"><div class="row" ><div class="" style="margin-left: 20px"><span><a href="" class="lou">#'+data.lou+'楼</a></span>&nbsp;&nbsp;<span class="timer">'+data.time+'</span> &nbsp;&nbsp; <span><a href="/'+name+'">'+name+'</a></span> <span style="margin-right: 50px" class="pull-right"><a href="javascript:void(0)" class="huifu" aname="'+name+'" aid="'+data.nid+'">回复</a></span> </div> </div>  <div class="well">\n' +#}
+{#                             '                      <span>@'+data.pname+'</span>:\n' +#}
+{#                             '                      <span>'+data.pc+'</span>\n' +#}
+{#                             '                      </div><div style="margin-left: 10px">'+data.content+'</div> ';#}
+
+                         var st='<hr class="anb">'+
+                    '<div class=" article_item" style="margin-left: 40px;" id="'+data.nid+'">\n' +
+                    '                <div class="row" >\n' +
+                    '                  <div class="" style="margin-left: 20px">\n' +
+                    '                        &nbsp;&nbsp;\n' +
+                        '                   <span ><img class="img-circle" src="/media/'+data.uig+'" width="30px" height="30px" alt=""></span>\n' +
+                    '                      <span class="timer">'+data.time+'</span>\n' +
+                    '                        &nbsp;&nbsp;\n' +
+                    '                      <span><a href="/'+name+'">'+name+'</a></span>\n' +
+                    '                      <span style="margin-right: 50px" class="pull-right"><a href="javascript:void(0)" class="huifu" aname="'+name+'" aid="'+data.nid+'">回复</a></span>\n' +
+                    '                  </div>\n' +
+                    '              </div>'+
+                    '<div style="margin-left: 10px">'+data.content+'</div>';
+                         $("#"+pid).append(st)
+                     }
+                    else {
+{#                         var s='<div class=" article_item  dy"><div class="row" ><div class="" style="margin-left: 20px"><span><a href="" class="lou">#'+data.lou+'楼</a></span>&nbsp;&nbsp;<span class="timer">'+data.time+'</span> &nbsp;&nbsp; <span><a href="/'+name+'">'+name+'</a></span> <span style="margin-right: 50px" class="pull-right"><a href="javascript:void(0)" class="huifu" aname="'+name+'" aid="'+data.nid+'">回复</a></span> </div> </div> <div style="margin-left: 10px">'+data.content+'</div>';#}
+
+                          var st='<hr class="anb">'+
+                    '<div class=" article_item" style="margin-left: 40px;" id="'+data.nid+'">\n' +
+                    '                <div class="row" >\n' +
+                    '                  <div class="" style="margin-left: 20px">\n' +
+                    '                        &nbsp;&nbsp;\n' +
+                        '                   <span ><img class="img-circle" src="/media/'+data.uig+'" width="30px" height="30px" alt=""></span>\n' +
+                    '                      <span class="timer">'+data.time+'</span>\n' +
+                    '                        &nbsp;&nbsp;\n' +
+                    '                      <span><a href="/'+name+'">'+name+'</a></span>\n' +
+                    '                      <span style="margin-right: 50px" class="pull-right"><a href="javascript:void(0)" class="huifu" aname="'+name+'" aid="'+data.nid+'">回复</a></span>\n' +
+                    '                  </div>\n' +
+                    '              </div>'+
+                    '<div style="margin-left: 10px">'+data.content+'</div>';
+                          $("#ddp").append(st);
+
+                    }
+{#                    $("#dap").append(s);#}
+{##}
+                }
+{##}
+            });
+{##}
+        });
+        $(".list-group").on("click",".huifu",function () {
+            $parent_comment_id=$(this).attr("aid");
+            $("#comment_con").focus().val("@"+$(this).attr("aname")+"\n");
+
+        });
+        var atid=$("#tian").attr("articleid");
+        $.ajax({
+        url:"/get_comment_tree/"+atid,
+        success:function (data) {
+            console.log(data);
+            var htmls=show_tree(data);
+            $("#ddp").append(htmls)
+
+        }
+
+
+
+
+    });
+
+
+ function show_tree(comment_list) {    //  [{"nid":67,"content":"111","children_list":[]}，{}，{}]
+           var html="";
+           $.each(comment_list,function (i,comment_dict) {
+                s='<hr class="anb">'+
+                    '<div class=" article_item" style="margin-left: 40px;" id="'+comment_dict["aid"]+'">\n' +
+                    '                <div class="row" >\n' +
+                    '                  <div class="" style="margin-left: 20px">\n' +
+                    '                        &nbsp;&nbsp;\n' +
+                        '                   <span ><img class="img-circle" src="/media/'+comment_dict["user__avatar"]+'" width="30px" height="30px" alt=""></span>\n' +
+                    '                      <span class="timer">'+comment_dict['create_time']+'</span>\n' +
+                    '                        &nbsp;&nbsp;\n' +
+                    '                      <span><a href="/'+comment_dict['user__username']+'">'+comment_dict['user__username']+'</a></span>\n' +
+                    '                      <span style="margin-right: 50px" class="pull-right"><a href="javascript:void(0)" class="huifu" aname="'+comment_dict['user__username']+'" aid="'+comment_dict['nid']+'">回复</a></span>\n' +
+                    '                  </div>\n' +
+                    '              </div>'+
+                    '<div style="margin-left: 10px">'+comment_dict["content"]+'</div>';
+{#                     '<hr class="anb">';#}
+
+                if (comment_dict["childern_list"].length>0){
+                   // 添加子评论样式
+                    s+=show_tree(comment_dict["childern_list"])
+
+                }
+
+                s+="</div>";
+                html+=s
+           });
+
+          return html
+   }
+
+</script>
+
+{% endblock %}

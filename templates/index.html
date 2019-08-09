@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/menu/css/index.css">
+    <script src="/static/jquery-3.2.1.min.js"></script>
+        <link rel="icon" href="/static/img/iron-man.png">
+    <script src="/static/dist/js/bootstrap.js"></script>
+
+    <style>
+         body {
+{#        #9d9d9d background-color: black;#}
+
+        background-image: url(/static/img/144.jpg);
+         background-size:cover;
+    }
+         .avatar_img,.desc{
+             float: left;
+         }
+
+        .info .timer{
+
+            color: darkgray;
+        }
+        .info{
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        .desc{
+            font-size: 14px;
+            margin-left: -40px;
+            text-align: justify;
+        }
+        .nav-main{
+{#            margin-top: -15px;#}
+{#            margin-left: -10px;#}
+{#            background-color: #2aabd2;#}
+            border-radius: 10px 10px 10px 10px;
+        }
+        .touxiang{
+            margin-top: 10px;
+
+            box-shadow: 0px 0px 15px black;
+        }
+        .touxiang:hover{
+            box-shadow: 0px 0px 15px white;
+        }
+        .dd{
+{#        width:500px;#}
+        border-radius: 20px 20px 20px 20px;
+            background-color: white;
+        box-shadow: 0px 0px 10px #7E7E7E;
+    }
+        .cd{
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+        .ee{
+            margin-left: 32px;
+{#            margin-top: 10px;#}
+        }
+        .anb{
+            opacity: 0
+        }
+        .dian{
+            color: #f0ad4e;
+        }
+        .diantu{
+            color: #5cb85c;
+        }
+        .tou{
+
+            box-shadow: 0px 0px 7px #7E7E7E;
+
+        }
+        .tou:hover{
+            box-shadow: 0px 0px 7px #66afe9;
+{#            color: #66afe9;#}
+
+        }
+        .ac{
+            color: black;
+        }
+        .ac:hover{
+            color: #eea236;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+        {% if request.user.is_authenticated %}
+           <a class="navbar-brand" href="/index/?user={{ request.user }}">首页</a>
+            {% else %}
+             <a class="navbar-brand" href="/index/">首页</a>
+        {% endif %}
+
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+{#        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>#}
+{#        <li><a href="#">Link</a></li>#}
+
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+
+          {% if request.user.is_authenticated %}
+                <li ><img class="img-circle touxiang" src="/media/{{ lujing }}" width="30px" height="30px" alt=""></li>
+                 <li><a href="/{{ request.user }}/">{{ request.user }}</a></li>
+                 <li><a href="/logout/">注销</a></li>
+          {% else %}
+                  <li><a href="/login/">登录</a></li>
+                   <li><a href="/zhuce/">注册</a></li>
+          {% endif %}
+
+         {%   if request.user.is_authenticated %}
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">设置<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="/backend/{{ request.user }}">后台管理</a></li>
+            <li><a href="/{{ request.user }}/">个人空间</a></li>
+            <li><a href="/backend/add_article">写文章</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="/logedit/">修改密码</a></li>
+          </ul>
+        </li>
+      {% endif %}
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-lg-2">
+
+            <div class="nav-main">
+<div class="nav-box">
+<div class="nav">
+  <ul class="nav-ul">
+
+      {% for gory in site %}
+                  <li><a href="javascript:void(0);"><span>{{ gory.name }}</span></a></li>
+                {% endfor %}
+
+  </ul>
+</div>
+<div class="nav-slide">
+{#    <div class="nav-slide-o"></div>#}
+    {% if request.user.is_authenticated %}
+        {% for gory in site %}
+                  <div class="nav-slide-o">
+                  <ul>
+                        {% for item in  xiaobiao %}
+                            {% if gory.id == item.siteCategory.id %}
+                               <li><a href="/index/{{ item.id }}/?user={{ request.user }}"><span>{{ item.name }}</span></a></li>
+                      {% endif %}
+                      {% endfor %}
+                  </ul>
+                  </div>
+                {% endfor %}
+
+        {% else %}
+    {% for gory in site %}
+                  <div class="nav-slide-o">
+                  <ul>
+                        {% for item in  xiaobiao %}
+                            {% if gory.id == item.siteCategory.id %}
+                               <li><a href="/index/{{ item.id }}"><span>{{ item.name }}</span></a></li>
+                      {% endif %}
+                      {% endfor %}
+                  </ul>
+                  </div>
+                {% endfor %}
+    {% endif %}
+</div>
+</div>
+</div>
+        </div>
+        <div class="col-lg-7">
+            <div class="article_list">
+                {% for article in article_list %}
+                  <div class="article_item  dd">
+                       <h5 class=" ee" ><a href="/{{ article.user.username }}/article/{{ article.nid }}" class="ac"><strong>{{ article.title }}</strong></a></h5>
+                       <div class="row cd">
+                           <a class="avatar_img col-md-2 " href="/{{ article.user.username }}/"><img class="img-rounded tou" src="/media/{{ article.user.avatar }}" alt="" width="60" height="80"></a>
+                           <div class="desc col-md-10">{{ article.desc }}</div>
+                       </div>
+
+                      <div class="info ee">
+                          <a href="/{{ article.user.username }}/"><span>{{ article.user.username }}</span></a> &nbsp;&nbsp;
+                          <span class="timer">{{ article.create_time|date:"Y-m-d H:i" }}</span>&nbsp;&nbsp;
+
+                          <span class="glyphicon glyphicon-comment diantu"></span>&nbsp;<strong class="dian">评论({{ article.comment_count }})</strong>
+                          <span class="glyphicon glyphicon-thumbs-up diantu"></span>&nbsp;<strong class="dian">点赞({{ article.up_count }})</strong>
+                      </div>
+                      <hr class="anb">
+                  </div>
+                {% endfor %}
+
+
+            </div>
+
+
+        </div>
+        <div class="col-lg-3">
+                <div class="panel panel-warning">
+                  <div class="panel-heading">Panel heading without title</div>
+                  <div class="panel-body">
+                    Panel content
+                  </div>
+                </div>
+                 <div class="panel panel-info">
+                  <div class="panel-heading">Panel heading without title</div>
+                  <div class="panel-body">
+                    Panel content
+                  </div>
+                </div>
+                <div class="panel panel-danger">
+                  <div class="panel-heading">Panel heading without title</div>
+                  <div class="panel-body">
+                    Panel content
+                  </div>
+                </div>
+
+        </div>
+
+    </div>
+<div style="text-align: center">
+            <ul class="pagination">
+                {% for item in page_fen %}
+                {{ item|safe }}
+                {% endfor %}
+
+            </ul>
+        </div>
+
+</div>
+<script type="text/javascript">
+	$(function(){
+	var thisTime;
+	$('.nav-ul li').mouseleave(function(even){
+			thisTime	=	setTimeout(thisMouseOut,1000);
+	});
+
+	$('.nav-ul li').mouseenter(function(){
+		clearTimeout(thisTime);
+		var thisUB	=	$('.nav-ul li').index($(this));
+		if($.trim($('.nav-slide-o').eq(thisUB).html()) != "")
+		{
+			$('.nav-slide').addClass('hover');
+			$('.nav-slide-o').hide();
+			$('.nav-slide-o').eq(thisUB).show();
+		}
+		else{
+			$('.nav-slide').removeClass('hover');
+		}
+
+	});
+
+	function thisMouseOut(){
+		$('.nav-slide').removeClass('hover');
+	}
+
+	$('.nav-slide').mouseenter(function(){
+		clearTimeout(thisTime);
+		$('.nav-slide').addClass('hover');
+	});
+	$('.nav-slide').mouseleave(function(){
+		$('.nav-slide').removeClass('hover');
+	})
+
+})
+</script>
+</body>
+
+</html>
+
+

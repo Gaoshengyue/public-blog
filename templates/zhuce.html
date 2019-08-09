@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Title</title>
+    <link href="/static/dist/css/bootstrap.css" rel="stylesheet">
+    <script src="/static/jquery-3.2.1.min.js"></script>
+    <script src="/static/dist/js/bootstrap.js"></script>
+     <link href="/static/sweetalert/sweetalert.css" rel="stylesheet">
+    <script src="/static/sweetalert/sweetalert.min.js"></script>
+    <link rel="icon" href="/static/img/iron-man.png">
+</head>
+<style>
+    .dd{
+{#        width:500px;#}
+        height: 670px;
+        border-radius: 20px 20px 20px 20px;
+        position: fixed;
+        box-shadow: 0px 0px 10px #7E7E7E;
+        top:4%;
+{#        left:33%;#}
+    }
+    body{
+{#        background-color: #9d9d9d;#}
+        background-image: url(/static/img/144.jpg);
+    }
+    .cd{
+        width: 70%;
+        margin-left: 60px;
+    }
+    .cee{
+        margin-top: 20px;
+        margin-left: 20px;
+    }
+    .cp{
+{#        margin-left: 165px;#}
+        font-size: 30px;
+    }
+    .error{
+        height: 12px;
+        width: 200px;
+        font-size: 12px;
+        color: #b92c28;
+    }
+    .ey{
+        height: 12px;
+        width: 200px;
+        font-size: 12px;
+        color: #b92c28;
+    }
+    .ddd{
+        box-shadow: 0px 0px 10px #7E7E7E;
+    }
+    .ddd:hover{
+        box-shadow: 0px 0px 10px #2b669a;
+    }
+</style>
+<body>
+
+
+<div class="container-fluid">
+    <div class="row">
+
+<div  class="dd col-md-4 col-md-offset-4" style="background-color: white">
+    {% csrf_token %}
+
+    <div class="cee">
+   <div class="cp" style="text-align: center">用户注册</div>
+  <div class="form-group cd">
+    <label for="exampleInputUser">Username</label>
+    <div class="input-group">
+      <span class="glyphicon glyphicon-user input-group-addon" style="background-color: #2aabd2;color: white;"></span>
+{#    <input type="text" class="form-control" id="exampleInputUser" placeholder="8~15位不能为纯英文或纯数字" name="user">#}
+        {{ regForm.user }}
+          </div>
+  </div>
+        <div id="user_error" class="cd error"></div>
+  <div class="form-group cd">
+    <label for="exampleInputPassword1">Password</label>
+      <div class="input-group">
+      <span class="glyphicon glyphicon-lock input-group-addon" style="background-color: #2aabd2;color: white;"></span>
+{#    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="8~15位不能为纯英文或纯数字" name="pwd">#}
+          {{ regForm.pwd }}
+          </div>
+  </div>
+        <div id="pwd_error" class="cd error"></div>
+        <div class="form-group cd">
+    <label for="exampleInputPassword2">Password(again)</label>
+      <div class="input-group">
+      <span class="glyphicon glyphicon-lock input-group-addon" style="background-color: #2aabd2;color: white;"></span>
+{#    <input type="password" class="form-control" id="exampleInputPassword2" placeholder="再次输入密码" name="pwd">#}
+          {{ regForm.repeat_pwd }}
+          </div>
+  </div>
+        <div id="pwd2_error" class="cd error"></div>
+
+        <div class="form-group cd">
+    <label for="exampleInputEmail">Email</label>
+      <div class="input-group">
+      <span class="glyphicon glyphicon-lock input-group-addon" style="background-color: #2aabd2;color: white;"></span>
+{#    <input type="email" class="form-control" id="exampleInputEmail" placeholder="Email地址" name="email">#}
+          {{ regForm.email }}
+          </div>
+  </div>
+        <div id="email_error" class="cd error"></div>
+         <div class="form-group cd" style="margin-top: 10px">
+    <label for="exampleInputFile">头像 <p><img id="touimg" title="图片格式推荐jpg" src="/static/default.jpg" alt="" width="50px" height="50px" class="img-circle ddd"></p></label>
+    <input type="file" id="exampleInputFile" style="margin-left: 100px;display: none" name="img">
+{#    <p class="help-block" style="margin-left: 100px">JPG格式图片</p>#}
+  </div>
+{#        <div id="img_error" class="cd error"></div>#}
+
+{#        驗證碼#}
+
+                  <div class="form-group" style="margin-left: 62px;margin-top: -10px">
+                    <label for="valid_code">验证码</label>
+                    <div class="row">
+                        <div class="col-md-5">
+{#                            <input type="text" class="form-control" id="valid_code" placeholder="valid_code">#}
+                            {{ regForm.valid_code }}
+                        </div>
+                        <div class="col-md-5">
+                            <img src="/get_valid_img/" width="150" height="34" id="valid_img" TITLE="点击刷新验证码">
+                        </div>
+
+                    </div>
+ <div id="yzm" class="ey" ></div>
+                  </div>
+
+
+  <div class="cd">
+      <button class="btn btn-warning btn-block tijiao">提交注册信息</button>
+  </div>
+</div>
+</div>
+    </div>
+</div>
+
+
+<script>
+{#    $(".tijiao").click(function(){#}
+{#         $("#user_error").text('').prev().removeClass("has-error");#}
+{#         $("#pwd_error").text('').prev().removeClass("has-error");#}
+{#         $("#yzm").text('').parent().parent().removeClass("has-error");#}
+{#         $("#email_error").text('').prev().removeClass("has-error");#}
+{#         $("#pwd2_error").text('').prev().removeClass("has-error");#}
+{#         $("#img_error").text('').prev().removeClass("has-error");#}
+{#        var username=$("#exampleInputUser").val();#}
+{#        var pwd=$("#exampleInputPassword1").val();#}
+{#        var pwd2=$("#exampleInputPassword2").val();#}
+{#        var email=$("#exampleInputEmail").val();#}
+{#        var valid_code=$("#valid_code").val();#}
+{#        var img=$("#exampleInputFile")[0].files[0];#}
+{##}
+{#        var formData=new FormData();#}
+{#        formData.append("user",username);#}
+{#        formData.append("pwd",pwd);#}
+{#        formData.append("pwd2",pwd2);#}
+{#        formData.append("email",email);#}
+{#        formData.append("valid_code",valid_code);#}
+{#        formData.append("img",img);#}
+{##}
+{##}
+{##}
+{#        $.ajax({#}
+{#            url:"/zhuce/",#}
+{#            type:"POST",#}
+{#            data:formData,#}
+{#            contentType:false,#}
+{#            processData:false,#}
+{#            headers:{"X-CSRFToken":$('[name="csrfmiddlewaretoken"]').val()},#}
+{#            success:function(data){#}
+{#                dec=JSON.parse(data);#}
+{#               if (dec.num==0){#}
+{##}
+{#                   $("#user_error").text(dec.error_user).prev().addClass("has-error");#}
+{#                   $("#pwd_error").text(dec.error_pwd).prev().addClass("has-error");#}
+{#               }#}
+{#               else if(dec.num==1){#}
+{#                        swal("注册成功", "即将跳转登录页面","success");#}
+{#                        setTimeout(function () {#}
+{#                             location.href="/index/"#}
+{#                        },2000);#}
+{#               }#}
+{#                else if(dec.num==2){#}
+{#                   $("#yzm").text(dec.error_yz).parent().parent().addClass("has-error")#}
+{#               }#}
+{#               else if(dec.num==3){#}
+{#                   $("#email_error").text(dec.error_email).prev().addClass("has-error");#}
+{#               }#}
+{#               else if(dec.num==4){#}
+{#                   $("#pwd2_error").text(dec.error_pwd2).prev().addClass("has-error");#}
+{#               }#}
+{#               else if(dec.num==5){#}
+{#                   $("#img_error").text(dec.error_img)#}
+{#               }#}
+{##}
+{#            }#}
+{#        });#}
+
+
+{#    });#}
+
+
+
+
+
+
+$(".tijiao").click(function () {
+
+        var $formData=new FormData();
+
+        $formData.append("user",$("#id_user").val());
+        $formData.append("pwd",$("#id_pwd").val());
+        $formData.append("repeat_pwd",$("#id_repeat_pwd").val());
+        $formData.append("email",$("#id_email").val());
+        $formData.append("valid_code",$("#id_valid_code").val());
+        var file=$("#exampleInputFile")[0].files[0];
+        $formData.append("file_img",file);
+        $formData.append("csrfmiddlewaretoken",$("[name='csrfmiddlewaretoken']").val());
+
+        $.ajax({
+            url:"/zhuce/",
+            type:"POST",
+            data:$formData,
+            processData:false,
+            contentType:false,
+
+            success:function (data) {
+                //console.log(data);
+                if (data.user){
+                    swal("注册成功", "即将跳转登录页面","success");
+                    setTimeout(function (){
+                             location.href="/login/"
+                        },2000);
+                }
+                else {
+                    $(".error").text("").prev().removeClass("has-error");
+                    $(".ey").text("").parent().parent().removeClass("has-error");
+                    $(".form-group").removeClass("has-error");
+{#                    console.log(data.errors);            // {"user":["",""],"pwd":["",""]}#}
+                    $.each(data.errors,function (i,j) {   // i : 错误字段名称 j: 该字段所有错误列表
+                          $("#id_"+i).parent().parent().addClass("has-error").next().css("color","red").text(j[0]);
+                          if (i=="valid_code"){
+                              $("#yzm").text(j[0]).parent().addClass("has-error")
+                          }
+                          if(i=="__all__"){
+                              $("#id_repeat_pwd").parent().parent().addClass("has-error").next().css("color","red").text(j[0]);
+                          }
+                    })
+
+
+
+                }
+
+            }
+        })
+
+
+    });
+
+
+
+    $("#exampleInputFile").change(function () {
+{#        获取上传对象#}
+        var file=$(this)[0].files[0];
+{#        读取上传文件url#}
+        var reader=new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload=function () {
+            $("#touimg").attr("src",this.result)
+        }
+    });
+        $("#valid_img").click(function () {
+         $(this)[0].src+="?"
+     });
+
+
+</script>
+</body>
+</html>

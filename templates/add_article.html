@@ -1,0 +1,79 @@
+{% extends "backend.html" %}
+
+
+
+{% block con %}
+
+      <div class="article_con list-group">
+          <a class="list-group-item active">文章添加</a>
+          <form action="/backend/add_article/" method="post" class="list-group-item">
+                  {% csrf_token %}
+                 <h5>标题</h5>
+                 <p><input type="text" name="title" class="form-control"></p>
+                 <h5>内容</h5>
+                 <p>
+                     <textarea name="content" id="editor_id" cols="30" rows="10"></textarea>
+                 </p>
+                 <div class="panel panel-warning">
+
+                 <div class="panel-heading">分类与标签</div>
+                   <div class="panel-body">
+                 <div class="panel panel-info">
+                       <div class="panel-heading">网站分类</div>
+                 <div class="panel-body">
+                      {% for siteCategory in siteCategoryList %}
+                       <p>{{ siteCategory.name }}：
+                           {% for sitedetaicategory in siteCategory.sitedetaicategory_set.all %}
+                               <input type="radio" name="site_cate" value="{{ sitedetaicategory.id }}">{{ sitedetaicategory.name }}
+                           {% endfor %}
+
+                       </p>
+                      {% endfor %}
+                 </div>
+                 </div>
+                   <div class="panel panel-danger">
+                      <div  class="panel-heading">个人空间分类</div>
+                   <div class="panel-body">
+                 {% for cate in cate_list %}
+                     <input type="radio" name="blog_cate" value="{{ cate.nid }}">{{ cate.title }}</input>
+                 {% endfor %}
+                   </div>
+                   </div>
+                   <div class="panel panel-success">
+                 <div class="panel-heading">个人空间标签</div>
+                   <div class="panel-body">
+                 {% for tag in tag_list %}
+                     <input type="checkbox" name="blog_tag" value="{{ tag.nid }}">{{ tag.title }}</input>
+                 {% endfor %}
+                   </div>
+                    </div>
+                   </div>
+                 </div>
+              <p><input type="submit" value="submit" class="btn btn-info"></p>
+          </form>
+      </div>
+
+
+     <script>
+
+           // 富文本编辑器
+            KindEditor.ready(function(K) {
+                window.editor = K.create('#editor_id',{
+                    width:"870px",
+                    height:"600px",
+                    //items:[]
+                    resizeType:1,
+                    uploadJson:"/upload_img/",
+                    extraFileUploadParams :{
+                        csrfmiddlewaretoken:$("[name='csrfmiddlewaretoken']").val()
+
+                    },
+                    filePostName:"article_img"
+
+                });
+        });
+
+     </script>
+{% endblock %}
+
+
