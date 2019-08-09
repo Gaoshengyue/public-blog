@@ -40,104 +40,6 @@ def login(request):
         return HttpResponse(rec)
     return render(request, "login.html")
 
-# def zhuce(request):
-#     if request.method == "POST":
-#         ret = {}
-#         user = request.POST.get("user")
-#         pwd = request.POST.get("pwd")
-#         if len(user) < 8:
-#             ret = {"num": 0, "error_user": "用户名长度不足8位"}
-#             if len(pwd) < 8:
-#                 ret["error_pwd"] = "密码长度不足8位"
-#             elif len(pwd) > 15:
-#                 ret["error_pwd"] = "用户名长度超过15位"
-#             else:
-#                 if not pwd.isdigit():
-#                     if not pwd.isalpha():
-#                         pass
-#                     else:
-#                         ret["error_pwd"] = "密码不能是英文"
-#                 else:
-#                     ret["error_pwd"] = "密码不能是纯数字"
-#             rec = json.dumps(ret)
-#             return HttpResponse(rec)
-#         elif len(user) > 15:
-#             ret = {"num": 0, "error_user": "用户名长度超过15位"}
-#             if len(pwd) < 8:
-#                 ret["error_pwd"] = "密码长度不足8位"
-#             elif len(pwd) > 15:
-#                 ret["error_pwd"] = "用户名长度超过15位"
-#             else:
-#                 if not pwd.isdigit():
-#                     if not pwd.isalpha():
-#                         pass
-#                     else:
-#                         ret["error_pwd"] = "密码不能是英文"
-#                 else:
-#                     ret["error_pwd"] = "密码不能是纯数字"
-#             rec = json.dumps(ret)
-#             return HttpResponse(rec)
-#         elif user.isdigit():
-#             ret = {"num": 0, "error_user": "用户名不能是纯数字"}
-#             if len(pwd) < 8:
-#                 ret["error_pwd"] = "密码长度不足8位"
-#             elif len(pwd) > 15:
-#                 ret["error_pwd"] = "用户名长度超过15位"
-#             else:
-#                 if not pwd.isdigit():
-#                     if not pwd.isalpha():
-#                         pass
-#                     else:
-#                         ret["error_pwd"] = "密码不能是英文"
-#                 else:
-#                     ret["error_pwd"] = "密码不能是纯数字"
-#             rec = json.dumps(ret)
-#             return HttpResponse(rec)
-#         elif user.isalpha():
-#             ret = {"num": 0, "error_user": "用户名不能是纯英文"}
-#             if len(pwd) < 8:
-#                 ret["error_pwd"] = "密码长度不足8位"
-#             elif len(pwd) > 15:
-#                 ret["error_pwd"] = "用户名长度超过15位"
-#             else:
-#                 if not pwd.isdigit():
-#                     if not pwd.isalpha():
-#                         pass
-#                     else:
-#                         ret["error_pwd"] = "密码不能是英文"
-#                 else:
-#                     ret["error_pwd"] = "密码不能是纯数字"
-#             rec = json.dumps(ret)
-#             return HttpResponse(rec)
-#         else:
-#             if len(pwd) < 8:
-#                 ret["num"] = 0
-#                 ret["error_pwd"] = "密码长度不足8位"
-#             elif len(pwd) > 15:
-#                 ret["num"] = 0
-#                 ret["error_pwd"] = "用户名长度超过15位"
-#             elif pwd.isdigit():
-#                 ret["num"] = 0
-#                 ret["error_pwd"] = "密码不能是纯数字"
-#             elif pwd.isalpha():
-#                 ret["num"] = 0
-#                 ret["error_pwd"] = "密码不能是英文"
-#             else:
-#                 if user == pwd:
-#                     ret["num"] = 0
-#                     ret["error_pwd"] = "用户名与密码不能重复"
-#                 else:
-#                     ret["num"]=1
-#                     UserInfo.objects.create(username=user, password=pwd)
-#                     file_obj = request.FILES.get("img")
-#                     fb = os.path.join(BASE_DIR, "blog", "static", "img", user + ".jpg")
-#                     with open(fb, "wb") as f_write:
-#                         for line in file_obj:
-#                             f_write.write(line)
-#             rec = json.dumps(ret)
-#             return HttpResponse(rec)
-#
-#     return render(request,"zhuce.html")
 def index(request,**kwargs):
     if not kwargs:
         user=request.GET.get("user")
@@ -303,8 +205,6 @@ def home_site(request,username,**kwargs):
         # 方式2：
         from django.db.models import Count
         # ret=HomeCategory.objects.filter(blog=blog).annotate(c=Count("article__nid")).values_list("title","c")
-        # print(ret)# <QuerySet [('yuan的数据库', 2), ('yuan的Django', 0), ('yuan的python基础', 1)]>
-
         # 查询当前站点的每一个标签的名称以及对应的文章数
         tags_list=Tag.objects.filter(blog=blog).annotate(c=Count("article__nid")).values_list("title","c","nid")
 
