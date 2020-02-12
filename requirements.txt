@@ -2,7 +2,7 @@ cryptography==2.1.4
 pyOpenSSL==19.0.0
 Pillow==6.1.0
 beautifulsoup4==4.8.0
-Django==1.11.10
+Django==1.11.28
 protobuf==3.9.1
 ipaddr==2.2.0
 lxml==4.4.0
