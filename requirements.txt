@@ -1,4 +1,4 @@
-cryptography==2.1.4
+cryptography==3.2
 pyOpenSSL==19.0.0
 Pillow==6.1.0
 beautifulsoup4==4.8.0
